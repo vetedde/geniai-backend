@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GENIAI</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        #myLoader {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div class="w3-panel w3-card-4">
+    <h2>GENIAI</h2>
+
+    <input class="w3-input w3-border" type="text" placeholder="Promt..." id="myInput">
+    <br>
+    <button class="w3-button w3-green" onclick="submitText()">Submit</button>
+    <button class="w3-button w3-red" onclick="clearForm()">Clear</button>
+
+    <div class="w3-container w3-margin">
+        <h2>Result:</h2>
+        <img id="loadedImage" src=""/>
+    </div>
+    
+</div>
+
+<div id="myLoader" class="w3-container w3-center">
+    <div class="w3-center w3-display-middle">
+        <i class="fa fa-spinner w3-spin" style="font-size:64px"></i>
+    </div>
+</div>
+
+<script>
+    function submitText() {
+        var text = $('#myInput').val();
+        $("#myLoader").css('visibility', 'visible');
+        fetch('./model?prompt=' + text).then((response) => {
+            if(!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.blob();
+        }).then((blob) => {
+            let url = URL.createObjectURL(blob);
+            $("#loadedImage").attr("src", url);
+            $("#myLoader").css('visibility', 'hidden');
+        }).catch((error) => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+
+    function clearForm() {
+        $('#myInput').val('');
+    }
+</script>
+
+</body>
+</html>
